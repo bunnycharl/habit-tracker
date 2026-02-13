@@ -7,9 +7,9 @@ set -e
 
 echo "🚀 Starting deployment to VPS..."
 
-# VPS credentials
-VPS_HOST="144.124.225.15"
-VPS_USER="root"
+# VPS configuration (set these as environment variables or GitHub secrets)
+VPS_HOST="${VPS_HOST:-144.124.225.15}"
+VPS_USER="${VPS_USER:-root}"
 VPS_DIR="/var/www/habit-tracker"
 
 # Colors
@@ -19,8 +19,8 @@ NC='\033[0m' # No Color
 
 echo -e "${YELLOW}📦 Connecting to VPS...${NC}"
 
-# SSH into VPS and run deployment commands
-ssh ${VPS_USER}@${VPS_HOST} << 'ENDSSH'
+# SSH into VPS and run deployment commands (using SSH key)
+ssh -i ~/.ssh/id_rsa ${VPS_USER}@${VPS_HOST} << 'ENDSSH'
     set -e
 
     echo "📁 Navigating to project directory..."

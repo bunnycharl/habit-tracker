@@ -1,0 +1,62 @@
+name: Setup VPS
+
+on:
+  workflow_dispatch: # Manual trigger only
+
+jobs:
+  setup:
+    runs-on: ubuntu-latest
+
+    steps:
+      - name: Checkout code
+        uses: actions/checkout@v4
+
+      - name: Setup VPS environment
+        uses: appleboy/ssh-action@v1.2.0
+        with:
+          host: ${{ secrets.VPS_HOST }}
+          username: ${{ secrets.VPS_USERNAME }}
+          password: ${{ secrets.VPS_PASSWORD }}
+          script: |
+            set -e
+
+            echo "📁 Creating directories..."
+            mkdir -p /opt/personal-tracker/data
+
+            echo "📋 Checking if repo exists..."
+            if [ ! -d "/opt/personal-tracker/.git" ]; then
+              echo "📥 Cloning repository..."
+              cd /opt
+              rm -rf personal-tracker
+              git clone https://github.com/bunnycharl/habit-tracker.git personal-tracker
+              cd personal-tracker
+            else
+              echo "✅ Repository exists, pulling latest..."
+              cd /opt/personal-tracker
+              git pull origin main
+            fi
+
+            echo "🔧 Setting permissions..."
+            chmod -R 755 /opt/personal-tracker/data
+
+            echo "🐳 Stopping old containers..."
+            docker rm -f habit-tracker 2>/dev/null || true
+
+            echo "📦 Pulling latest Docker image..."
+            docker pull ghcr.io/bunnycharl/habit-tracker:latest
+
+            echo "🚀 Starting container..."
+            cd /opt/personal-tracker
+            docker compose down --remove-orphans --timeout 10 || true
+            docker compose up -d
+
+            echo "🧹 Cleaning up old images..."
+            docker image prune -f
+
+            echo "📊 Container status:"
+            docker compose ps
+
+            echo "📝 Recent logs:"
+            docker compose logs --tail=20 habit-tracker
+
+            echo "✅ Setup complete!"

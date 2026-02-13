@@ -7,9 +7,14 @@ set -e
 
 echo "🚀 Starting deployment to VPS..."
 
-# VPS configuration (set these as environment variables or GitHub secrets)
-VPS_HOST="${VPS_HOST:-144.124.225.15}"
-VPS_USER="${VPS_USER:-root}"
+# VPS configuration (REQUIRED: set these as environment variables)
+if [ -z "$VPS_HOST" ] || [ -z "$VPS_USER" ]; then
+    echo "❌ Error: VPS_HOST and VPS_USER environment variables must be set"
+    echo "Example: export VPS_HOST=your-vps-ip"
+    echo "         export VPS_USER=root"
+    exit 1
+fi
+
 VPS_DIR="/var/www/habit-tracker"
 
 # Colors

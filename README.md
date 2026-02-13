@@ -31,6 +31,10 @@ Data-driven habit tracking application with beautiful minimalist design.
 # Install dependencies
 npm install
 
+# Create local environment file
+cp .env.local.example .env.local
+# Edit .env.local with your settings
+
 # Initialize database with sample data
 npm run init-db
 
@@ -39,6 +43,8 @@ npm run dev
 ```
 
 Application will be available at `http://localhost:3000`
+
+**⚠️ Security Note:** Never commit `.env.local` - it's gitignored for your protection.
 
 ### Scripts
 
@@ -50,23 +56,33 @@ Application will be available at `http://localhost:3000`
 
 ### Environment Variables
 
-Create a `.env` file:
+On your VPS, create `/var/www/habit-tracker/.env`:
 
 ```env
 PORT=3000
 NODE_ENV=production
 DB_PATH=./data/habits.db
-CORS_ORIGIN=https://tracker.nkudryawov.ru
+CORS_ORIGIN=https://your-domain.com
 ```
+
+**🔒 Important:** Never commit `.env` files to git!
 
 ### VPS Deployment
 
-The application uses GitHub Actions for automatic deployment to VPS.
+The application uses GitHub Actions for automatic deployment.
 
-**Server:** tracker.nkudryawov.ru
-**VPS:** 144.124.225.15
+**Setup GitHub Secrets:**
+1. Go to repo Settings → Secrets → Actions
+2. Add: `VPS_HOST`, `VPS_USERNAME`, `VPS_SSH_KEY`
 
 Push to `main` branch to trigger automatic deployment.
+
+**Manual deployment:**
+```bash
+export VPS_HOST=your-vps-ip
+export VPS_USER=your-username
+./scripts/deploy.sh
+```
 
 ## API Documentation
 
@@ -114,3 +130,16 @@ personal-tracker/
 ## License
 
 MIT
+
+## 🔒 Security
+
+**See [SECURITY.md](SECURITY.md) for detailed security guidelines.**
+
+Quick rules:
+- ✅ Use environment variables for all sensitive data
+- ✅ Never commit passwords, keys, or personal info
+- ✅ Use `.env.local` for local development (gitignored)
+- ✅ Use GitHub Secrets for CI/CD
+- ✅ Use SSH keys instead of passwords
+- ❌ Never hardcode IP addresses, emails, or credentials
+

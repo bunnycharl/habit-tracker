@@ -2,7 +2,7 @@ version: '3.8'
 
 services:
   habit-tracker:
-    image: ghcr.io/nkudryawov/personal-tracker:latest
+    image: ghcr.io/bunnycharl/habit-tracker:latest
     container_name: habit-tracker
     restart: unless-stopped
     ports:

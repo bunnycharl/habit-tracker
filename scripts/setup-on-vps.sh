@@ -20,8 +20,14 @@ else
     echo "PasswordAuthentication yes" >> /etc/ssh/sshd_config
 fi
 
-systemctl restart sshd
-echo "✅ SSH настроен (root может подключаться с паролем)"
+# Restart SSH (handle both sshd and ssh service names)
+if systemctl restart sshd 2>/dev/null; then
+    echo "✅ SSH настроен (root может подключаться с паролем)"
+elif systemctl restart ssh 2>/dev/null; then
+    echo "✅ SSH настроен (root может подключаться с паролем)"
+else
+    echo "⚠️  Не удалось перезапустить SSH. Выполните вручную: systemctl restart ssh"
+fi
 
 # 2. Разблокировать fail2ban (если установлен)
 if systemctl is-active --quiet fail2ban; then

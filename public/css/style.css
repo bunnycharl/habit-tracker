@@ -184,10 +184,10 @@ input[type="text"]:focus {
     height: 44px;
     border-radius: 2px;
     cursor: pointer;
-    opacity: 0.3;
+    opacity: 0.8;
     transition: all 0.2s;
     touch-action: manipulation;
-    border: 2px solid transparent;
+    border: 2px solid rgba(0, 0, 0, 0.1);
     padding: 0;
 }
 .color-opt.active {

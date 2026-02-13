@@ -1,0 +1,119 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>Habit Sequence | Data-Driven Tracker</title>
+    <link rel="preconnect" href="https://fonts.googleapis.com">
+    <link rel="preconnect" href="https://fonts.gstatic.com" crossorigin>
+    <link href="https://fonts.googleapis.com/css2?family=JetBrains+Mono:wght@300;400;500;700&family=Space+Grotesk:wght@300;400;500;600&display=swap" rel="stylesheet">
+    <link rel="stylesheet" href="/css/style.css">
+</head>
+<body>
+
+    <div class="dashboard-container">
+
+        <!-- Left Column: Input -->
+        <div class="col-input">
+            <div class="panel habit-creation">
+                <span class="label-micro">System Input</span>
+                <h2 class="data-large" style="margin-bottom: 24px;">New Protocol</h2>
+
+                <div class="input-group">
+                    <span class="label-micro">Identifier</span>
+                    <input type="text" placeholder="e.g. Morning Run" id="habitInput">
+                </div>
+
+                <div class="input-group">
+                    <span class="label-micro">Marker Tone</span>
+                    <div class="color-selector" id="colorSelector">
+                        <div class="color-opt bg-mint active" data-color="#6CEFA0"></div>
+                        <div class="color-opt bg-blue" data-color="#6CDDEF"></div>
+                        <div class="color-opt bg-purple" data-color="#B06CEF"></div>
+                        <div class="color-opt bg-orange" data-color="#EF9B6C"></div>
+                    </div>
+                </div>
+
+                <button class="btn-add" id="addHabitBtn">Initialize Routine</button>
+            </div>
+
+            <div class="panel" style="flex: 1; justify-content: flex-end;">
+                 <span class="label-micro">System Status</span>
+                 <div style="margin-top: auto;">
+                     <div class="data-mono" style="margin-bottom: 8px;">ACTIVE HABITS: <span id="activeCount">0</span></div>
+                     <div class="data-mono" style="margin-bottom: 8px;">COMPLETION RATE: <span id="completionRate">0</span>%</div>
+                     <div class="chart-mini" style="margin-top: 16px;" id="weeklyMiniChart">
+                         <!-- Weekly chart bars will be inserted here -->
+                     </div>
+                 </div>
+            </div>
+        </div>
+
+        <!-- Center Column: Visualization -->
+        <div class="col-viz">
+
+            <!-- Stats Row -->
+            <div class="stats-row">
+                <div class="panel stat-card">
+                    <span class="label-micro">Total Executions</span>
+                    <span class="data-huge" id="totalExecutions">0</span>
+                    <div class="chart-mini" style="height: 20px;" id="executionsChart">
+                        <!-- Mini chart for executions trend -->
+                    </div>
+                </div>
+                <div class="panel stat-card">
+                    <span class="label-micro">Max Streak</span>
+                    <span class="data-huge" id="maxStreak">0<span style="font-size: 16px; color: #888; font-weight: 400; margin-left: 4px;">DAYS</span></span>
+                    <div class="chart-mini" style="height: 20px;" id="streakChart">
+                        <!-- Mini chart for streak trend -->
+                    </div>
+                </div>
+                <div class="panel stat-card">
+                    <span class="label-micro">Efficiency</span>
+                    <span class="data-huge" id="efficiency">0%</span>
+                     <div class="chart-mini" style="height: 20px;" id="efficiencyChart">
+                        <!-- Mini chart for efficiency trend -->
+                    </div>
+                </div>
+            </div>
+
+            <!-- Heatmap -->
+            <div class="panel heatmap-container">
+                <div style="display:flex; justify-content:space-between;">
+                    <span class="label-micro">Annual Consistency Matrix</span>
+                    <span class="label-micro" id="heatmapYear">2026</span>
+                </div>
+
+                <div class="code-texture">
+                    01001<br>
+                    11010<br>
+                    10111
+                </div>
+
+                <div class="heatmap-grid" id="heatmapGrid">
+                    <!-- Heatmap cells will be generated here -->
+                </div>
+            </div>
+        </div>
+
+        <!-- Right Column: Today's Habits -->
+        <div class="col-today">
+            <div class="panel" style="height: 100%;">
+                <div class="today-header">
+                    <span class="label-micro">Current Cycle</span>
+                    <span class="data-mono" id="currentDate">LOADING...</span>
+                </div>
+
+                <div class="habit-list" id="habitList">
+                    <!-- Habit items will be generated here -->
+                </div>
+            </div>
+        </div>
+
+    </div>
+
+    <!-- Load application as ES6 module -->
+    <script type="module" src="/js/app.js"></script>
+
+</body>
+</html>

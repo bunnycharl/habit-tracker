@@ -1,0 +1,614 @@
+<html lang="en" vid="0"><head vid="1">
+    <meta charset="UTF-8" vid="2">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0" vid="3">
+    <title vid="4">Habit Sequence | Data-Driven Tracker</title>
+    <link rel="preconnect" href="https://fonts.googleapis.com" vid="5">
+    <link rel="preconnect" href="https://fonts.gstatic.com" crossorigin="" vid="6">
+    <link href="https://fonts.googleapis.com/css2?family=JetBrains+Mono:wght@300;400;500;700&amp;family=Space+Grotesk:wght@300;400;500;600&amp;display=swap" rel="stylesheet" vid="7">
+    <style vid="8">
+        :root {
+            
+            --c-bg: #F4F4F4; 
+            --c-card: #FFFFFF;
+            --c-text-primary: #0D0D0D;
+            --c-text-secondary: #888888;
+            
+            
+            --c-accent: #6CEFA0; 
+            
+            --c-accent-blue: #6CDDEF;
+            --c-accent-purple: #B06CEF;
+            --c-accent-orange: #EF9B6C;
+
+            --font-data: 'JetBrains Mono', monospace; 
+            --font-ui: 'Space Grotesk', sans-serif; 
+
+            --radius: 2px; 
+            --shadow: 0 4px 20px rgba(0,0,0,0.04);
+            --border: 1px solid rgba(0,0,0,0.05);
+        }
+
+        * {
+            box-sizing: border-box;
+            margin: 0;
+            padding: 0;
+        }
+
+        body {
+            background-color: var(--c-bg);
+            color: var(--c-text-primary);
+            font-family: var(--font-ui);
+            height: 100vh;
+            overflow: hidden;
+            display: flex;
+            justify-content: center;
+            align-items: center;
+        }
+
+        
+        .label-micro {
+            font-family: var(--font-data);
+            font-size: 10px;
+            text-transform: uppercase;
+            letter-spacing: 1.5px;
+            color: var(--c-text-secondary);
+            margin-bottom: 8px;
+            display: block;
+        }
+
+        .data-huge {
+            font-family: var(--font-ui);
+            font-size: 42px;
+            font-weight: 300;
+            line-height: 1;
+            letter-spacing: -1px;
+        }
+
+        .data-large {
+            font-family: var(--font-ui);
+            font-size: 28px;
+            font-weight: 400;
+            letter-spacing: -0.5px;
+        }
+
+        .data-mono {
+            font-family: var(--font-data);
+            font-size: 14px;
+        }
+
+        
+        .dashboard-container {
+            width: 90vw;
+            height: 85vh;
+            max-width: 1400px;
+            display: grid;
+            grid-template-columns: 320px 1fr 380px;
+            gap: 24px;
+        }
+
+        
+        .panel {
+            background: var(--c-card);
+            border-radius: var(--radius);
+            box-shadow: var(--shadow);
+            padding: 24px;
+            display: flex;
+            flex-direction: column;
+            position: relative;
+            overflow: hidden;
+        }
+
+        
+        .col-input {
+            display: flex;
+            flex-direction: column;
+            gap: 24px;
+        }
+
+        .habit-creation {
+            height: auto;
+        }
+
+        .input-group {
+            margin-bottom: 20px;
+        }
+        
+        input[type="text"] {
+            width: 100%;
+            border: none;
+            border-bottom: 1px solid #E0E0E0;
+            font-family: var(--font-data);
+            font-size: 14px;
+            padding: 8px 0;
+            outline: none;
+            transition: border-color 0.2s;
+        }
+        input[type="text"]:focus {
+            border-bottom-color: var(--c-text-primary);
+        }
+
+        .color-selector {
+            display: flex;
+            gap: 8px;
+            margin-top: 8px;
+        }
+        .color-opt {
+            width: 20px;
+            height: 20px;
+            border-radius: 2px;
+            cursor: pointer;
+            opacity: 0.3;
+            transition: all 0.2s;
+        }
+        .color-opt.active {
+            opacity: 1;
+            transform: scale(1.1);
+            box-shadow: 0 2px 5px rgba(0,0,0,0.1);
+        }
+
+        .btn-add {
+            background: var(--c-text-primary);
+            color: white;
+            border: none;
+            padding: 12px;
+            font-family: var(--font-data);
+            font-size: 12px;
+            text-transform: uppercase;
+            letter-spacing: 1px;
+            width: 100%;
+            cursor: pointer;
+            border-radius: var(--radius);
+        }
+        .btn-add:hover {
+            opacity: 0.9;
+        }
+
+        
+        .col-viz {
+            display: grid;
+            grid-template-rows: auto 1fr;
+            gap: 24px;
+        }
+
+        .stats-row {
+            display: grid;
+            grid-template-columns: 1fr 1fr 1fr;
+            gap: 24px;
+            height: 120px;
+        }
+
+        .stat-card {
+            display: flex;
+            flex-direction: column;
+            justify-content: space-between;
+        }
+
+        .chart-mini {
+            display: flex;
+            align-items: flex-end;
+            gap: 4px;
+            height: 40px;
+            width: 100%;
+        }
+        .bar {
+            flex: 1;
+            background: #EEEEEE;
+            transition: height 0.5s ease;
+        }
+        .bar.fill {
+            background: var(--c-accent);
+        }
+
+        .heatmap-container {
+            display: flex;
+            flex-direction: column;
+        }
+
+        .heatmap-grid {
+            display: grid;
+            grid-template-columns: repeat(53, 1fr); 
+            grid-template-rows: repeat(7, 1fr);     
+            gap: 4px;
+            height: 100%;
+            padding-top: 16px;
+        }
+
+        .day-cell {
+            background: #F0F0F0;
+            border-radius: 1px;
+            position: relative;
+            cursor: pointer;
+            transition: transform 0.1s;
+        }
+        .day-cell:hover {
+            transform: scale(1.4);
+            z-index: 10;
+            border: 1px solid var(--c-text-primary);
+        }
+        
+        
+        .popover {
+            position: absolute;
+            top: 50%;
+            left: 50%;
+            transform: translate(-50%, -50%);
+            background: rgba(255,255,255,0.95);
+            backdrop-filter: blur(10px);
+            border: 1px solid rgba(0,0,0,0.1);
+            padding: 16px;
+            width: 200px;
+            box-shadow: 0 10px 30px rgba(0,0,0,0.1);
+            pointer-events: none;
+            opacity: 0;
+            transition: opacity 0.2s;
+            z-index: 20;
+        }
+        .day-cell:hover .popover {
+            opacity: 1;
+        }
+
+        
+        .col-today {
+            display: flex;
+            flex-direction: column;
+            gap: 16px;
+        }
+
+        .today-header {
+            display: flex;
+            justify-content: space-between;
+            align-items: baseline;
+            margin-bottom: 24px;
+            border-bottom: 1px solid #EEE;
+            padding-bottom: 16px;
+        }
+
+        .habit-list {
+            display: flex;
+            flex-direction: column;
+            gap: 12px;
+            overflow-y: auto;
+            flex: 1;
+        }
+
+        .habit-item {
+            display: flex;
+            align-items: center;
+            padding: 16px;
+            background: #FAFAFA;
+            border-radius: var(--radius);
+            transition: all 0.3s cubic-bezier(0.16, 1, 0.3, 1);
+            border: 1px solid transparent;
+            cursor: pointer;
+        }
+
+        .habit-item:hover {
+            background: #F0F0F0;
+        }
+
+        .habit-item.completed {
+            background: white;
+            border-color: var(--active-color, var(--c-accent));
+        }
+
+        .checkbox {
+            width: 20px;
+            height: 20px;
+            border: 2px solid #DDD;
+            margin-right: 16px;
+            border-radius: 2px;
+            display: flex;
+            align-items: center;
+            justify-content: center;
+            transition: all 0.2s;
+        }
+
+        .habit-item.completed .checkbox {
+            background: var(--active-color, var(--c-accent));
+            border-color: var(--active-color, var(--c-accent));
+        }
+        
+        .habit-item.completed .habit-name {
+            color: #AAA;
+            text-decoration: line-through;
+        }
+
+        .habit-info {
+            flex: 1;
+        }
+        
+        .habit-name {
+            font-family: var(--font-data);
+            font-size: 14px;
+            color: var(--c-text-primary);
+            margin-bottom: 4px;
+        }
+        
+        .habit-streak {
+            font-size: 10px;
+            color: var(--c-text-secondary);
+            text-transform: uppercase;
+            letter-spacing: 0.5px;
+        }
+
+        
+        .code-texture {
+            position: absolute;
+            right: 24px;
+            top: 24px;
+            font-family: var(--font-data);
+            font-size: 8px;
+            line-height: 1.4;
+            color: #EEE;
+            text-align: right;
+            pointer-events: none;
+            user-select: none;
+            z-index: 0;
+        }
+
+        
+        .bg-mint { background-color: var(--c-accent); }
+        .bg-blue { background-color: var(--c-accent-blue); }
+        .bg-purple { background-color: var(--c-accent-purple); }
+        .bg-orange { background-color: var(--c-accent-orange); }
+
+        
+        @media (max-width: 1024px) {
+            .dashboard-container {
+                grid-template-columns: 1fr 1fr;
+                height: auto;
+                overflow-y: auto;
+                display: block;
+            }
+            .col-input, .col-viz, .col-today {
+                margin-bottom: 24px;
+            }
+        }
+    </style>
+</head>
+<body vid="9">
+
+    <div class="dashboard-container" vid="10">
+        
+        
+        <div class="col-input" vid="11">
+            <div class="panel habit-creation" vid="12">
+                <span class="label-micro" vid="13">System Input</span>
+                <h2 class="data-large" style="margin-bottom: 24px;" vid="14">New Protocol</h2>
+                
+                <div class="input-group" vid="15">
+                    <span class="label-micro" vid="16">Identifier</span>
+                    <input type="text" placeholder="e.g. Morning Run" id="habitInput" vid="17">
+                </div>
+
+                <div class="input-group" vid="18">
+                    <span class="label-micro" vid="19">Marker Tone</span>
+                    <div class="color-selector" vid="20">
+                        <div class="color-opt bg-mint active" data-color="#6CEFA0" vid="21"></div>
+                        <div class="color-opt bg-blue" data-color="#6CDDEF" vid="22"></div>
+                        <div class="color-opt bg-purple" data-color="#B06CEF" vid="23"></div>
+                        <div class="color-opt bg-orange" data-color="#EF9B6C" vid="24"></div>
+                    </div>
+                </div>
+
+                <button class="btn-add" vid="25">Initialize Routine</button>
+            </div>
+
+            <div class="panel" style="flex: 1; justify-content: flex-end;" vid="26">
+                 <span class="label-micro" vid="27">System Status</span>
+                 <div style="margin-top: auto;" vid="28">
+                     <div class="data-mono" style="margin-bottom: 8px;" vid="29">ACTIVE HABITS: <span id="activeCount" vid="30">4</span></div>
+                     <div class="data-mono" style="margin-bottom: 8px;" vid="31">COMPLETION RATE: 82%</div>
+                     <div class="chart-mini" style="margin-top: 16px;" vid="32">
+                         <div class="bar fill" style="height: 40%" vid="33"></div>
+                         <div class="bar fill" style="height: 60%" vid="34"></div>
+                         <div class="bar fill" style="height: 30%" vid="35"></div>
+                         <div class="bar fill" style="height: 80%" vid="36"></div>
+                         <div class="bar fill" style="height: 50%" vid="37"></div>
+                         <div class="bar fill" style="height: 90%" vid="38"></div>
+                         <div class="bar fill" style="height: 70%" vid="39"></div>
+                     </div>
+                 </div>
+            </div>
+        </div>
+
+        
+        <div class="col-viz" vid="40">
+            
+            <div class="stats-row" vid="41">
+                <div class="panel stat-card" vid="42">
+                    <span class="label-micro" vid="43">Total Executions</span>
+                    <span class="data-huge" vid="44">3,048</span>
+                    <div class="chart-mini" style="height: 20px;" vid="45">
+                        <div class="bar fill" style="height: 40%; opacity: 0.3;" vid="46"></div>
+                        <div class="bar fill" style="height: 60%; opacity: 0.3;" vid="47"></div>
+                        <div class="bar fill" style="height: 80%;" vid="48"></div>
+                    </div>
+                </div>
+                <div class="panel stat-card" vid="49">
+                    <span class="label-micro" vid="50">Max Streak</span>
+                    <span class="data-huge" vid="51">48<span style="font-size: 16px; color: #888; font-weight: 400; margin-left: 4px;" vid="52">DAYS</span></span>
+                    <div class="chart-mini" style="height: 20px;" vid="53">
+                        <div class="bar fill" style="height: 30%; opacity: 0.3;" vid="54"></div>
+                        <div class="bar fill" style="height: 90%;" vid="55"></div>
+                        <div class="bar fill" style="height: 50%; opacity: 0.3;" vid="56"></div>
+                    </div>
+                </div>
+                <div class="panel stat-card" vid="57">
+                    <span class="label-micro" vid="58">Efficiency</span>
+                    <span class="data-huge" vid="59">96%</span>
+                     <div class="chart-mini" style="height: 20px;" vid="60">
+                        <div class="bar fill" style="height: 60%; opacity: 0.3;" vid="61"></div>
+                        <div class="bar fill" style="height: 80%; opacity: 0.3;" vid="62"></div>
+                        <div class="bar fill" style="height: 96%;" vid="63"></div>
+                    </div>
+                </div>
+            </div>
+
+            
+            <div class="panel heatmap-container" vid="64">
+                <div style="display:flex; justify-content:space-between;" vid="65">
+                    <span class="label-micro" vid="66">Annual Consistency Matrix</span>
+                    <span class="label-micro" vid="67">2023</span>
+                </div>
+                
+                <div class="code-texture" vid="68">
+                    01001<br vid="69">
+                    11010<br vid="70">
+                    10111
+                </div>
+
+                <div class="heatmap-grid" id="heatmapGrid" vid="71">
+                    
+                </div>
+            </div>
+        </div>
+
+        
+        <div class="col-today" vid="72">
+            <div class="panel" style="height: 100%;" vid="73">
+                <div class="today-header" vid="74">
+                    <span class="label-micro" vid="75">Current Cycle</span>
+                    <span class="data-mono" id="currentDate" vid="76">OCT 24</span>
+                </div>
+
+                <div class="habit-list" id="habitList" vid="77">
+                    
+                    <div class="habit-item" style="--active-color: var(--c-accent);" vid="78">
+                        <div class="checkbox" vid="79"></div>
+                        <div class="habit-info" vid="80">
+                            <div class="habit-name" vid="81">Read 30 mins</div>
+                            <div class="habit-streak" vid="82">Streak: 12 days</div>
+                        </div>
+                    </div>
+
+                    <div class="habit-item completed" style="--active-color: var(--c-accent-blue);" vid="83">
+                        <div class="checkbox" vid="84">
+                            <svg width="10" height="8" viewBox="0 0 10 8" fill="none" xmlns="http://www.w3.org/2000/svg" vid="85">
+                                <path d="M1 4L3.5 6.5L9 1" stroke="white" stroke-width="2" vid="86"></path>
+                            </svg>
+                        </div>
+                        <div class="habit-info" vid="87">
+                            <div class="habit-name" vid="88">Hydration</div>
+                            <div class="habit-streak" vid="89">Streak: 48 days</div>
+                        </div>
+                    </div>
+
+                    <div class="habit-item" style="--active-color: var(--c-accent-purple);" vid="90">
+                        <div class="checkbox" vid="91"></div>
+                        <div class="habit-info" vid="92">
+                            <div class="habit-name" vid="93">Code Review</div>
+                            <div class="habit-streak" vid="94">Streak: 5 days</div>
+                        </div>
+                    </div>
+
+                     <div class="habit-item" style="--active-color: var(--c-accent-orange);" vid="95">
+                        <div class="checkbox" vid="96"></div>
+                        <div class="habit-info" vid="97">
+                            <div class="habit-name" vid="98">Meditation</div>
+                            <div class="habit-streak" vid="99">Streak: 0 days</div>
+                        </div>
+                    </div>
+                </div>
+            </div>
+        </div>
+
+    </div>
+
+    <script vid="100">
+        
+        const dateEl = document.getElementById('currentDate');
+        const now = new Date();
+        dateEl.innerText = now.toLocaleDateString('en-US', { month: 'short', day: 'numeric' }).toUpperCase();
+
+        
+        const grid = document.getElementById('heatmapGrid');
+        const totalDays = 53 * 7; 
+        
+        for (let i = 0; i < totalDays; i++) {
+            const cell = document.createElement('div');
+            cell.className = 'day-cell';
+            
+            
+            const rand = Math.random();
+            if (rand > 0.7) {
+                
+                cell.style.backgroundColor = 'var(--c-accent)';
+            } else if (rand > 0.5) {
+                
+                cell.style.backgroundColor = '#B8F2D0';
+            } else if (rand > 0.3) {
+                
+                cell.style.backgroundColor = '#E0E0E0';
+            }
+            
+
+            
+            const popover = document.createElement('div');
+            popover.className = 'popover';
+            popover.innerHTML = `
+                <div class="label-micro">DAY ${i+1}</div>
+                <div class="data-mono">COMPLETED: ${Math.floor(rand * 100)}%</div>
+                <div class="chart-mini" style="height: 10px; margin-top: 8px;">
+                     <div class="bar fill" style="width: ${rand * 100}%"></div>
+                </div>
+            `;
+            cell.appendChild(popover);
+            
+            grid.appendChild(cell);
+        }
+
+        
+        const list = document.getElementById('habitList');
+        list.addEventListener('click', (e) => {
+            const item = e.target.closest('.habit-item');
+            if (item) {
+                item.classList.toggle('completed');
+                const checkbox = item.querySelector('.checkbox');
+                if (item.classList.contains('completed')) {
+                    checkbox.innerHTML = `<svg width="10" height="8" viewBox="0 0 10 8" fill="none"><path d="M1 4L3.5 6.5L9 1" stroke="white" stroke-width="2"/></svg>`;
+                } else {
+                    checkbox.innerHTML = '';
+                }
+            }
+        });
+
+        
+        const colorOpts = document.querySelectorAll('.color-opt');
+        let selectedColor = '#6CEFA0';
+        colorOpts.forEach(opt => {
+            opt.addEventListener('click', () => {
+                colorOpts.forEach(c => c.classList.remove('active'));
+                opt.classList.add('active');
+                selectedColor = opt.dataset.color;
+            });
+        });
+
+        
+        const addBtn = document.querySelector('.btn-add');
+        const input = document.getElementById('habitInput');
+        
+        addBtn.addEventListener('click', () => {
+            if (input.value.trim() === '') return;
+            
+            const div = document.createElement('div');
+            div.className = 'habit-item';
+            div.style.setProperty('--active-color', selectedColor);
+            div.innerHTML = `
+                <div class="checkbox"></div>
+                <div class="habit-info">
+                    <div class="habit-name">${input.value}</div>
+                    <div class="habit-streak">Streak: 0 days</div>
+                </div>
+            `;
+            list.appendChild(div);
+            input.value = '';
+            
+            
+            const countEl = document.getElementById('activeCount');
+            countEl.innerText = parseInt(countEl.innerText) + 1;
+        });
+
+    </script>
+
+</body></html>

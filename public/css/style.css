@@ -1367,7 +1367,6 @@ input[type="text"]:focus {
 /* ── Accessibility: Color Option Button Reset ──────────── */
 
 button.color-opt {
-    border: none;
     padding: 0;
     font-size: 0;
 }

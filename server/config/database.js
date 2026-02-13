@@ -38,11 +38,25 @@ export async function getDatabase() {
         // Enable foreign keys
         database.run('PRAGMA foreign_keys = ON');
 
-        // Promisify database methods
-        database.run = promisify(database.run.bind(database));
-        database.get = promisify(database.get.bind(database));
-        database.all = promisify(database.all.bind(database));
-        database.close = promisify(database.close.bind(database));
+        // Custom promisification for database methods
+        // sqlite3's run() returns result via 'this' context, not callback parameters
+        const originalRun = database.run.bind(database);
+        const originalGet = database.get.bind(database);
+        const originalAll = database.all.bind(database);
+        const originalClose = database.close.bind(database);
+
+        database.run = function(...args) {
+          return new Promise((resolve, reject) => {
+            originalRun(...args, function(err) {
+              if (err) reject(err);
+              else resolve({ lastID: this.lastID, changes: this.changes });
+            });
+          });
+        };
+
+        database.get = promisify(originalGet);
+        database.all = promisify(originalAll);
+        database.close = promisify(originalClose);
 
         db = database;
         resolve(database);

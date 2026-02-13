@@ -1,27 +1,31 @@
-name: Deploy to VPS
+name: Deploy to Production
 
 on:
-  push:
+  workflow_run:
+    workflows: ["Build and Push Docker Image"]
+    types:
+      - completed
     branches:
       - main
 
 jobs:
   deploy:
     runs-on: ubuntu-latest
+    if: ${{ github.event.workflow_run.conclusion == 'success' }}
 
     steps:
-      - name: Checkout code
-        uses: actions/checkout@v3
-
-      - name: Deploy to VPS
-        uses: appleboy/ssh-action@master
+      - name: Deploy to server via SSH
+        uses: appleboy/ssh-action@v1.2.0
         with:
-          host: ${{ secrets.VPS_HOST }}
-          username: ${{ secrets.VPS_USERNAME }}
-          password: ${{ secrets.VPS_PASSWORD }}
+          host: ${{ secrets.SERVER_HOST }}
+          username: ${{ secrets.SERVER_USER }}
+          password: ${{ secrets.SERVER_PASSWORD }}
           script: |
-            cd /var/www/habit-tracker
+            cd /opt/personal-tracker
             git pull origin main
-            npm install --production
-            pm2 restart habit-tracker || pm2 start server/index.js --name habit-tracker
-            echo "✅ Deployment completed successfully"
+            # Pull new image BEFORE stopping (zero-downtime)
+            docker pull ghcr.io/${{ github.repository }}:latest
+            # Now stop and restart (image already cached)
+            docker compose down --remove-orphans --timeout 10
+            docker compose up -d
+            docker image prune -f

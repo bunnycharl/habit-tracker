@@ -8,6 +8,7 @@ import { HabitList } from './components/HabitList.js';
 import { Heatmap } from './components/Heatmap.js';
 import { Statistics } from './components/Statistics.js';
 import { formatDisplayDate, getTodayString } from './utils/dates.js';
+import { ToastManager } from './components/Toast.js';
 
 class HabitTrackerApp {
   constructor() {
@@ -21,6 +22,10 @@ class HabitTrackerApp {
     console.log('🚀 Initializing Habit Tracker...');
 
     try {
+      // Initialize toast notifications (global)
+      window.Toast = new ToastManager();
+      window.Toast.init();
+
       // Initialize components
       this.habitList = new HabitList(document.getElementById('habitList'));
       this.heatmap = new Heatmap(document.getElementById('heatmapGrid'));
@@ -46,41 +51,103 @@ class HabitTrackerApp {
   }
 
   setupEventListeners() {
-    // Color selector
+    // Color selector with ARIA radio group support
     const colorSelector = document.getElementById('colorSelector');
+    const customColorPicker = document.getElementById('customColorPicker');
+
     if (colorSelector) {
       colorSelector.addEventListener('click', (e) => {
         const colorOpt = e.target.closest('.color-opt');
         if (!colorOpt) return;
 
-        // Update UI
-        document.querySelectorAll('.color-opt').forEach(opt => {
+        // If it's the custom color picker, trigger the input
+        if (colorOpt.classList.contains('color-picker-opt')) {
+          customColorPicker.click();
+          return;
+        }
+
+        // Update UI and ARIA
+        colorSelector.querySelectorAll('.color-opt').forEach(opt => {
           opt.classList.remove('active');
+          opt.setAttribute('aria-checked', 'false');
+          opt.setAttribute('tabindex', '-1');
         });
         colorOpt.classList.add('active');
+        colorOpt.setAttribute('aria-checked', 'true');
+        colorOpt.setAttribute('tabindex', '0');
 
         // Update selected color
         this.selectedColor = colorOpt.dataset.color;
       });
+
+      // Handle custom color picker
+      if (customColorPicker) {
+        customColorPicker.addEventListener('change', (e) => {
+          const customColor = e.target.value;
+          const pickerOpt = e.target.closest('.color-picker-opt');
+
+          // Update UI
+          colorSelector.querySelectorAll('.color-opt').forEach(opt => {
+            opt.classList.remove('active');
+            opt.setAttribute('aria-checked', 'false');
+            opt.setAttribute('tabindex', '-1');
+          });
+
+          pickerOpt.classList.add('active');
+          pickerOpt.setAttribute('aria-checked', 'true');
+          pickerOpt.setAttribute('tabindex', '0');
+          pickerOpt.style.setProperty('--custom-color', customColor);
+
+          // Update selected color
+          this.selectedColor = customColor;
+        });
+      }
+
+      // Arrow key navigation for radio group
+      colorSelector.addEventListener('keydown', (e) => {
+        if (!['ArrowLeft', 'ArrowRight'].includes(e.key)) return;
+        e.preventDefault();
+
+        const opts = Array.from(colorSelector.querySelectorAll('.color-opt'));
+        const activeIndex = opts.findIndex(o => o.classList.contains('active'));
+        let nextIndex;
+
+        if (e.key === 'ArrowRight') {
+          nextIndex = activeIndex < opts.length - 1 ? activeIndex + 1 : 0;
+        } else {
+          nextIndex = activeIndex > 0 ? activeIndex - 1 : opts.length - 1;
+        }
+
+        opts.forEach(o => {
+          o.classList.remove('active');
+          o.setAttribute('aria-checked', 'false');
+          o.setAttribute('tabindex', '-1');
+        });
+        opts[nextIndex].classList.add('active');
+        opts[nextIndex].setAttribute('aria-checked', 'true');
+        opts[nextIndex].setAttribute('tabindex', '0');
+        opts[nextIndex].focus();
+
+        this.selectedColor = opts[nextIndex].dataset.color;
+      });
     }
 
-    // Add habit button
-    const addBtn = document.getElementById('addHabitBtn');
-    const input = document.getElementById('habitInput');
-
-    if (addBtn && input) {
-      addBtn.addEventListener('click', () => this.handleAddHabit());
-
-      // Allow Enter key to add habit
-      input.addEventListener('keypress', (e) => {
-        if (e.key === 'Enter') {
-          this.handleAddHabit();
-        }
+    // Form submit handler
+    const habitForm = document.getElementById('habitForm');
+    if (habitForm) {
+      habitForm.addEventListener('submit', (e) => {
+        e.preventDefault();
+        this.handleAddHabit();
       });
     }
 
     // Listen to habit toggle events
     document.addEventListener('habit-toggled', () => {
+      this.refresh();
+    });
+
+    // Listen to habit edit/delete events
+    document.addEventListener('habit-updated', () => {
       this.refresh();
     });
   }
@@ -91,7 +158,10 @@ class HabitTrackerApp {
 
     const name = input.value.trim();
     if (!name) {
-      alert('Please enter a habit name');
+      if (window.Toast) {
+        window.Toast.warning('Please enter a habit name');
+      }
+      input.focus();
       return;
     }
 
@@ -107,10 +177,14 @@ class HabitTrackerApp {
       // Refresh data
       await this.loadData();
 
-      console.log(`✅ Habit "${name}" created successfully`);
+      if (window.Toast) {
+        window.Toast.success(`Habit "${name}" created successfully`);
+      }
     } catch (error) {
       console.error('Error creating habit:', error);
-      alert('Failed to create habit. Please try again.');
+      if (window.Toast) {
+        window.Toast.error('Failed to create habit. Please try again.');
+      }
     }
   }
 
@@ -162,33 +236,34 @@ class HabitTrackerApp {
   }
 
   showError(message) {
-    // Simple error display (could be enhanced with a modal or toast)
-    const container = document.querySelector('.dashboard-container');
-    if (!container) return;
-
-    const errorDiv = document.createElement('div');
-    errorDiv.style.cssText = `
-      position: fixed;
-      top: 20px;
-      right: 20px;
-      background: #ff4444;
-      color: white;
-      padding: 16px 24px;
-      border-radius: 4px;
-      box-shadow: 0 4px 12px rgba(0,0,0,0.15);
-      font-family: var(--font-data);
-      font-size: 14px;
-      z-index: 1000;
-    `;
-    errorDiv.textContent = message;
-
-    document.body.appendChild(errorDiv);
-
-    // Auto-remove after 5 seconds
-    setTimeout(() => {
-      errorDiv.remove();
-    }, 5000);
+    if (window.Toast) {
+      window.Toast.error(message);
+    } else {
+      console.error(message);
+    }
   }
+}
+
+// Register Service Worker
+if ('serviceWorker' in navigator) {
+  window.addEventListener('load', async () => {
+    try {
+      const registration = await navigator.serviceWorker.register('/sw.js');
+      console.log('Service Worker registered with scope:', registration.scope);
+
+      // Check for updates
+      registration.addEventListener('updatefound', () => {
+        const newWorker = registration.installing;
+        newWorker.addEventListener('statechange', () => {
+          if (newWorker.state === 'activated' && navigator.serviceWorker.controller) {
+            console.log('New Service Worker version available. Refresh to update.');
+          }
+        });
+      });
+    } catch (error) {
+      console.error('Service Worker registration failed:', error);
+    }
+  });
 }
 
 // Initialize app when DOM is ready

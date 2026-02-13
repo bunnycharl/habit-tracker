@@ -1,0 +1,85 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>Offline | Habit Sequence</title>
+    <style>
+        * {
+            box-sizing: border-box;
+            margin: 0;
+            padding: 0;
+        }
+        body {
+            background-color: #F4F4F4;
+            font-family: 'JetBrains Mono', 'Courier New', monospace;
+            display: flex;
+            align-items: center;
+            justify-content: center;
+            min-height: 100vh;
+            color: #0D0D0D;
+        }
+        .offline-container {
+            text-align: center;
+            padding: 48px;
+            background: #FFFFFF;
+            border: 1px solid rgba(0,0,0,0.05);
+            border-radius: 2px;
+            box-shadow: 0 4px 20px rgba(0,0,0,0.04);
+            max-width: 420px;
+            width: 90%;
+        }
+        .offline-icon {
+            font-size: 48px;
+            margin-bottom: 24px;
+            opacity: 0.6;
+        }
+        .label-micro {
+            font-size: 9px;
+            letter-spacing: 3px;
+            text-transform: uppercase;
+            color: #888888;
+            display: block;
+            margin-bottom: 12px;
+        }
+        h1 {
+            font-family: 'Space Grotesk', sans-serif;
+            font-size: 28px;
+            font-weight: 600;
+            margin-bottom: 16px;
+        }
+        p {
+            font-size: 13px;
+            color: #888888;
+            line-height: 1.6;
+            margin-bottom: 24px;
+        }
+        .btn-retry {
+            display: inline-block;
+            padding: 12px 32px;
+            background: #0D0D0D;
+            color: #FFFFFF;
+            border: none;
+            border-radius: 2px;
+            font-family: 'JetBrains Mono', monospace;
+            font-size: 11px;
+            letter-spacing: 2px;
+            text-transform: uppercase;
+            cursor: pointer;
+            transition: opacity 0.2s;
+        }
+        .btn-retry:hover {
+            opacity: 0.8;
+        }
+    </style>
+</head>
+<body>
+    <div class="offline-container">
+        <div class="offline-icon">&#x26A0;</div>
+        <span class="label-micro">Connection Status</span>
+        <h1>You are offline</h1>
+        <p>No network connection detected. Your data will sync automatically when connectivity is restored.</p>
+        <button class="btn-retry" onclick="window.location.reload()">Retry Connection</button>
+    </div>
+</body>
+</html>

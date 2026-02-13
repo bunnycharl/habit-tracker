@@ -2,9 +2,7 @@ version: '3.8'
 
 services:
   habit-tracker:
-    build:
-      context: .
-      dockerfile: Dockerfile
+    image: ghcr.io/nkudryawov/personal-tracker:latest
     container_name: habit-tracker
     restart: unless-stopped
     ports:

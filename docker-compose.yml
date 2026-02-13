@@ -1,0 +1,30 @@
+version: '3.8'
+
+services:
+  habit-tracker:
+    build:
+      context: .
+      dockerfile: Dockerfile
+    container_name: habit-tracker
+    restart: unless-stopped
+    ports:
+      - "3001:3000"
+    environment:
+      - PORT=3000
+      - NODE_ENV=production
+      - DB_PATH=/app/data/habits.db
+      - CORS_ORIGIN=https://tracker.nkudryawov.ru
+    volumes:
+      - ./data:/app/data
+    networks:
+      - habit-tracker-network
+    healthcheck:
+      test: ["CMD", "node", "-e", "require('http').get('http://localhost:3000/api/health', (r) => {process.exit(r.statusCode === 200 ? 0 : 1)})"]
+      interval: 30s
+      timeout: 3s
+      retries: 3
+      start_period: 10s
+
+networks:
+  habit-tracker-network:
+    driver: bridge

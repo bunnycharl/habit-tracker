@@ -1,4 +1,4 @@
-const CACHE_NAME = 'habit-tracker-v20260214';
+const CACHE_NAME = 'habit-tracker-v20260214-auth';
 
 const STATIC_ASSETS = [
   '/',
@@ -14,6 +14,7 @@ const STATIC_ASSETS = [
   '/js/components/Statistics.js',
   '/js/components/Toast.js',
   '/js/components/Modal.js',
+  '/js/components/PinLogin.js',
   '/manifest.json'
 ];
 
@@ -55,8 +56,8 @@ self.addEventListener('fetch', (event) => {
     return;
   }
 
-  // CSS files: network-first to always get latest styles
-  if (url.pathname.endsWith('.css')) {
+  // CSS and JS files: network-first to always get latest
+  if (url.pathname.endsWith('.css') || url.pathname.endsWith('.js')) {
     event.respondWith(networkFirst(request));
     return;
   }

@@ -186,7 +186,7 @@ input[type="text"]:focus {
     min-height: 44px;
     border-radius: 2px;
     cursor: pointer;
-    opacity: 0.3;
+    opacity: 0.5;
     transition: all 0.2s;
     touch-action: manipulation;
     border: none;
@@ -805,7 +805,7 @@ input[type="text"]:focus {
 }
 
 .color-opt:hover {
-    opacity: 0.6;
+    opacity: 0.75;
     transform: scale(1.15);
 }
 

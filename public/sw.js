@@ -1,4 +1,4 @@
-const CACHE_NAME = 'habit-tracker-v1.0.0';
+const CACHE_NAME = 'habit-tracker-v20260214';
 
 const STATIC_ASSETS = [
   '/',
@@ -55,7 +55,13 @@ self.addEventListener('fetch', (event) => {
     return;
   }
 
-  // Static assets: cache-first
+  // CSS files: network-first to always get latest styles
+  if (url.pathname.endsWith('.css')) {
+    event.respondWith(networkFirst(request));
+    return;
+  }
+
+  // Other static assets: cache-first
   event.respondWith(cacheFirst(request));
 });
 

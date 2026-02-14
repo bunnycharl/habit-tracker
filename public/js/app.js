@@ -122,10 +122,10 @@ class HabitTrackerApp {
       this.showLogin();
     });
 
-    // Insert at top of dashboard
+    // Insert before dashboard (outside the grid)
     const dashboard = document.querySelector('.dashboard-container');
     if (dashboard) {
-      dashboard.insertBefore(btn, dashboard.firstChild);
+      dashboard.parentNode.insertBefore(btn, dashboard);
     }
   }
 

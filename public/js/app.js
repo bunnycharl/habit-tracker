@@ -45,10 +45,6 @@ class HabitTrackerApp {
     const dashboard = document.querySelector('.dashboard-container');
     if (dashboard) dashboard.style.display = 'none';
 
-    // Remove existing logout button
-    const existingLogout = document.querySelector('.logout-btn');
-    if (existingLogout) existingLogout.remove();
-
     // Create or reuse login container
     let loginContainer = document.getElementById('loginContainer');
     if (!loginContainer) {
@@ -87,9 +83,6 @@ class HabitTrackerApp {
       // Set up UI event listeners
       this.setupEventListeners();
 
-      // Add logout button
-      this.addLogoutButton();
-
       // Set current date
       this.updateCurrentDate();
 
@@ -103,29 +96,6 @@ class HabitTrackerApp {
     } catch (error) {
       console.error('❌ Failed to initialize application:', error);
       this.showError('Failed to initialize application. Please refresh the page.');
-    }
-  }
-
-  addLogoutButton() {
-    // Remove existing if any
-    const existing = document.querySelector('.logout-btn');
-    if (existing) existing.remove();
-
-    const username = localStorage.getItem('authUser') || '';
-    const btn = document.createElement('button');
-    btn.className = 'logout-btn';
-    btn.textContent = `${username} / LOGOUT`;
-    btn.addEventListener('click', () => {
-      localStorage.removeItem('authToken');
-      localStorage.removeItem('authUser');
-      if (this._refreshInterval) clearInterval(this._refreshInterval);
-      this.showLogin();
-    });
-
-    // Insert before dashboard (outside the grid)
-    const dashboard = document.querySelector('.dashboard-container');
-    if (dashboard) {
-      dashboard.parentNode.insertBefore(btn, dashboard);
     }
   }
 

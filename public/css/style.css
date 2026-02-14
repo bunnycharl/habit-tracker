@@ -583,17 +583,12 @@ input[type="text"]:focus {
     /* Heatmap: full 53 weeks on desktop */
     .heatmap-grid {
         grid-template-columns: repeat(53, 1fr);
-        gap: 4px;
-        height: 100%;
+        gap: 3px;
         min-height: unset;
     }
 
     .heatmap-month-labels {
         grid-template-columns: repeat(53, 1fr);
-    }
-
-    .day-cell {
-        aspect-ratio: unset;
     }
 
     .color-opt {
@@ -1621,26 +1616,3 @@ button.color-opt:focus-visible {
     border-color: #E74C3C;
 }
 
-/* Logout button */
-.logout-btn {
-    position: fixed;
-    top: 12px;
-    right: 16px;
-    z-index: 100;
-    background: var(--c-card);
-    border: none;
-    cursor: pointer;
-    color: var(--c-text-secondary);
-    font-family: var(--font-data);
-    font-size: 11px;
-    letter-spacing: 1px;
-    padding: 6px 12px;
-    border-radius: var(--radius);
-    box-shadow: var(--shadow);
-    transition: color 0.2s, background 0.2s;
-}
-
-.logout-btn:hover {
-    color: var(--c-text-primary);
-    background: var(--c-habit-hover);
-}

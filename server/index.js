@@ -11,6 +11,9 @@ import { getDatabase } from './config/database.js';
 import habitsRouter from './routes/habits.js';
 import executionsRouter from './routes/executions.js';
 import analyticsRouter from './routes/analytics.js';
+import authRouter from './routes/auth.js';
+import { authMiddleware } from './middleware/auth.js';
+import bcrypt from 'bcryptjs';
 
 const __filename = fileURLToPath(import.meta.url);
 const __dirname = path.dirname(__filename);
@@ -37,10 +40,13 @@ app.use((req, res, next) => {
 // Serve static files from public directory
 app.use(express.static(path.join(__dirname, '../public')));
 
-// API routes
-app.use('/api/habits', habitsRouter);
-app.use('/api/executions', executionsRouter);
-app.use('/api/analytics', analyticsRouter);
+// Auth routes (no middleware)
+app.use('/api/auth', authRouter);
+
+// Protected API routes
+app.use('/api/habits', authMiddleware, habitsRouter);
+app.use('/api/executions', authMiddleware, executionsRouter);
+app.use('/api/analytics', authMiddleware, analyticsRouter);
 
 // Health check endpoint
 app.get('/api/health', (req, res) => {
@@ -71,7 +77,29 @@ app.use((err, req, res, next) => {
 async function startServer() {
   try {
     // Initialize database connection
-    await getDatabase();
+    const db = await getDatabase();
+
+    // Auto-migrate: create users table if not exists
+    await db.run(`CREATE TABLE IF NOT EXISTS users (
+      id INTEGER PRIMARY KEY AUTOINCREMENT,
+      username TEXT NOT NULL UNIQUE,
+      pin_hash TEXT NOT NULL,
+      created_at DATETIME DEFAULT CURRENT_TIMESTAMP
+    )`);
+
+    // Seed users if empty
+    const existingUsers = await db.all('SELECT id FROM users LIMIT 1');
+    if (existingUsers.length === 0) {
+      const users = [
+        { username: 'allodasha', pin: '0880' },
+        { username: 'bunnycharl', pin: '2403' }
+      ];
+      for (const user of users) {
+        const pinHash = await bcrypt.hash(user.pin, 10);
+        await db.run('INSERT INTO users (username, pin_hash) VALUES (?, ?)', [user.username, pinHash]);
+      }
+      console.log('👤 Users seeded: allodasha, bunnycharl');
+    }
 
     // Start listening
     app.listen(CONFIG.PORT, () => {

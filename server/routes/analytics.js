@@ -10,7 +10,7 @@ const router = express.Router();
  */
 router.get('/overview', async (req, res, next) => {
   try {
-    const overview = await AnalyticsService.getOverview();
+    const overview = await AnalyticsService.getOverview(req.userId);
     res.json(overview);
   } catch (error) {
     next(error);
@@ -23,7 +23,7 @@ router.get('/overview', async (req, res, next) => {
  */
 router.get('/habits/:id/stats', async (req, res, next) => {
   try {
-    const stats = await AnalyticsService.getHabitStats(req.params.id);
+    const stats = await AnalyticsService.getHabitStats(req.params.id, req.userId);
     res.json(stats);
   } catch (error) {
     if (error.message === 'Habit not found') {
@@ -53,7 +53,7 @@ router.get('/habits/:id/streak', async (req, res, next) => {
  */
 router.get('/streaks', async (req, res, next) => {
   try {
-    const streaks = await StreakService.getAllStreaks();
+    const streaks = await StreakService.getAllStreaks(req.userId);
     res.json(streaks);
   } catch (error) {
     next(error);
@@ -68,7 +68,7 @@ router.get('/streaks', async (req, res, next) => {
 router.get('/heatmap', async (req, res, next) => {
   try {
     const year = req.query.year ? parseInt(req.query.year) : new Date().getFullYear();
-    const heatmap = await AnalyticsService.getHeatmap(year);
+    const heatmap = await AnalyticsService.getHeatmap(year, req.userId);
     res.json(heatmap);
   } catch (error) {
     next(error);
@@ -81,7 +81,7 @@ router.get('/heatmap', async (req, res, next) => {
  */
 router.get('/weekly-chart', async (req, res, next) => {
   try {
-    const chartData = await AnalyticsService.getWeeklyChart();
+    const chartData = await AnalyticsService.getWeeklyChart(req.userId);
     res.json(chartData);
   } catch (error) {
     next(error);

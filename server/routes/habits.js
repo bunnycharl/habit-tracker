@@ -9,7 +9,7 @@ const router = express.Router();
  */
 router.get('/', async (req, res, next) => {
   try {
-    const habits = await HabitService.getAllHabits();
+    const habits = await HabitService.getAllHabits(req.userId);
     res.json(habits);
   } catch (error) {
     next(error);
@@ -22,7 +22,7 @@ router.get('/', async (req, res, next) => {
  */
 router.get('/stats', async (req, res, next) => {
   try {
-    const habits = await HabitService.getHabitsWithStats();
+    const habits = await HabitService.getHabitsWithStats(req.userId);
     res.json(habits);
   } catch (error) {
     next(error);
@@ -35,7 +35,7 @@ router.get('/stats', async (req, res, next) => {
  */
 router.get('/:id', async (req, res, next) => {
   try {
-    const habit = await HabitService.getHabitById(req.params.id);
+    const habit = await HabitService.getHabitById(req.params.id, req.userId);
     res.json(habit);
   } catch (error) {
     if (error.message === 'Habit not found') {
@@ -52,7 +52,7 @@ router.get('/:id', async (req, res, next) => {
  */
 router.post('/', async (req, res, next) => {
   try {
-    const habit = await HabitService.createHabit(req.body);
+    const habit = await HabitService.createHabit(req.body, req.userId);
     res.status(201).json(habit);
   } catch (error) {
     if (error.message.includes('required') || error.message.includes('cannot be empty')) {
@@ -69,7 +69,7 @@ router.post('/', async (req, res, next) => {
  */
 router.put('/:id', async (req, res, next) => {
   try {
-    const habit = await HabitService.updateHabit(req.params.id, req.body);
+    const habit = await HabitService.updateHabit(req.params.id, req.body, req.userId);
     res.json(habit);
   } catch (error) {
     if (error.message === 'Habit not found') {
@@ -88,7 +88,7 @@ router.put('/:id', async (req, res, next) => {
  */
 router.delete('/:id', async (req, res, next) => {
   try {
-    const result = await HabitService.deleteHabit(req.params.id);
+    const result = await HabitService.deleteHabit(req.params.id, req.userId);
     res.json(result);
   } catch (error) {
     if (error.message === 'Habit not found') {

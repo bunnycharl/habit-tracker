@@ -1,6 +1,7 @@
 import fs from 'fs';
 import path from 'path';
 import { fileURLToPath } from 'url';
+import bcrypt from 'bcryptjs';
 import { getDatabase } from '../config/database.js';
 
 const __filename = fileURLToPath(import.meta.url);
@@ -27,8 +28,26 @@ async function initDatabase() {
     }
 
     console.log('✅ Database initialized successfully');
-    console.log('📊 Tables created: habits, executions');
+    console.log('📊 Tables created: users, habits, executions');
     console.log('📈 View created: habit_stats');
+
+    // Seed users
+    const existingUsers = await db.all('SELECT id FROM users LIMIT 1');
+    if (existingUsers.length === 0) {
+      const users = [
+        { username: 'allodasha', pin: '0880' },
+        { username: 'bunnycharl', pin: '2403' }
+      ];
+
+      for (const user of users) {
+        const pinHash = await bcrypt.hash(user.pin, 10);
+        await db.run(
+          'INSERT INTO users (username, pin_hash) VALUES (?, ?)',
+          [user.username, pinHash]
+        );
+      }
+      console.log('👤 Users seeded: allodasha, bunnycharl');
+    }
 
     // Insert sample data for demonstration
     const sampleHabits = [

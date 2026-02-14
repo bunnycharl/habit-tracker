@@ -15,13 +15,27 @@ class APIError extends Error {
 
 async function request(endpoint, options = {}) {
   try {
+    const headers = {
+      'Content-Type': 'application/json',
+      ...options.headers
+    };
+
+    const token = localStorage.getItem('authToken');
+    if (token) {
+      headers['Authorization'] = `Bearer ${token}`;
+    }
+
     const response = await fetch(`${API_BASE}${endpoint}`, {
-      headers: {
-        'Content-Type': 'application/json',
-        ...options.headers
-      },
-      ...options
+      ...options,
+      headers
     });
+
+    if (response.status === 401) {
+      localStorage.removeItem('authToken');
+      localStorage.removeItem('authUser');
+      window.dispatchEvent(new Event('auth-logout'));
+      throw new APIError('Authorization required', 401);
+    }
 
     const data = await response.json();
 
@@ -37,6 +51,21 @@ async function request(endpoint, options = {}) {
     throw new APIError('Network error: ' + error.message, 0);
   }
 }
+
+export const AuthAPI = {
+  async login(username, pin) {
+    const response = await fetch(`${API_BASE}/auth/login`, {
+      method: 'POST',
+      headers: { 'Content-Type': 'application/json' },
+      body: JSON.stringify({ username, pin })
+    });
+    const data = await response.json();
+    if (!response.ok) {
+      throw new APIError(data.error || 'Login failed', response.status);
+    }
+    return data;
+  }
+};
 
 export const HabitAPI = {
   /**

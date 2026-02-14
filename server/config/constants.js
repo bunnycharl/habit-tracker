@@ -7,7 +7,8 @@ export const CONFIG = {
   PORT: process.env.PORT || 3000,
   NODE_ENV: process.env.NODE_ENV || 'development',
   DB_PATH: process.env.DB_PATH || './data/habits.db',
-  CORS_ORIGIN: process.env.CORS_ORIGIN || '*'
+  CORS_ORIGIN: process.env.CORS_ORIGIN || '*',
+  JWT_SECRET: process.env.JWT_SECRET || 'habit-tracker-secret-key-change-in-production'
 };
 
 export const COLORS = {

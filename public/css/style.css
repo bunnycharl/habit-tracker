@@ -1400,3 +1400,242 @@ button.color-opt:focus-visible {
         border: 1px solid LinkText;
     }
 }
+
+/* ═══════════════════════════════════
+   PIN LOGIN SCREEN
+   ═══════════════════════════════════ */
+
+.pin-screen {
+    position: fixed;
+    top: 0;
+    left: 0;
+    width: 100%;
+    height: 100%;
+    background: var(--c-bg);
+    display: flex;
+    align-items: center;
+    justify-content: center;
+    z-index: 10000;
+}
+
+.pin-content {
+    text-align: center;
+    width: 100%;
+    max-width: 320px;
+    padding: 20px;
+}
+
+.pin-title {
+    font-family: var(--font-data);
+    font-size: 14px;
+    font-weight: 500;
+    letter-spacing: 4px;
+    color: var(--c-text-secondary);
+    margin-bottom: 40px;
+}
+
+.pin-subtitle {
+    font-family: var(--font-data);
+    font-size: 11px;
+    letter-spacing: 2px;
+    color: var(--c-text-secondary);
+    margin-bottom: 24px;
+}
+
+.pin-users {
+    display: flex;
+    gap: 20px;
+    justify-content: center;
+}
+
+.pin-user-btn {
+    display: flex;
+    flex-direction: column;
+    align-items: center;
+    gap: 10px;
+    background: none;
+    border: none;
+    cursor: pointer;
+    padding: 16px 24px;
+    border-radius: var(--radius);
+    transition: background 0.2s;
+}
+
+.pin-user-btn:hover {
+    background: var(--c-card);
+}
+
+.pin-user-avatar {
+    width: 64px;
+    height: 64px;
+    border-radius: 50%;
+    background: var(--c-accent);
+    color: #fff;
+    font-family: var(--font-data);
+    font-size: 24px;
+    font-weight: 500;
+    display: flex;
+    align-items: center;
+    justify-content: center;
+}
+
+.pin-user-name {
+    font-family: var(--font-data);
+    font-size: 13px;
+    color: var(--c-text-primary);
+    letter-spacing: 1px;
+}
+
+.pin-entry {
+    display: flex;
+    flex-direction: column;
+    align-items: center;
+}
+
+.pin-back {
+    font-family: var(--font-data);
+    font-size: 12px;
+    color: var(--c-text-secondary);
+    cursor: pointer;
+    align-self: flex-start;
+    margin-bottom: 20px;
+    letter-spacing: 1px;
+}
+
+.pin-back:hover {
+    color: var(--c-text-primary);
+}
+
+.pin-selected-user {
+    font-family: var(--font-data);
+    font-size: 16px;
+    font-weight: 500;
+    color: var(--c-text-primary);
+    margin-bottom: 24px;
+    letter-spacing: 2px;
+}
+
+.pin-dots {
+    display: flex;
+    gap: 16px;
+    margin-bottom: 12px;
+}
+
+.pin-dot {
+    width: 14px;
+    height: 14px;
+    border-radius: 50%;
+    border: 2px solid var(--c-text-secondary);
+    background: transparent;
+    transition: background 0.15s, border-color 0.15s;
+}
+
+.pin-dot.filled {
+    background: var(--c-text-primary);
+    border-color: var(--c-text-primary);
+}
+
+.pin-error {
+    font-family: var(--font-data);
+    font-size: 12px;
+    color: #E74C3C;
+    height: 20px;
+    line-height: 20px;
+    margin-bottom: 8px;
+    letter-spacing: 1px;
+}
+
+.pin-keypad {
+    display: grid;
+    grid-template-columns: repeat(3, 1fr);
+    gap: 12px;
+    max-width: 260px;
+}
+
+.pin-key {
+    width: 72px;
+    height: 72px;
+    border-radius: 50%;
+    border: none;
+    background: var(--c-card);
+    font-family: var(--font-data);
+    font-size: 24px;
+    font-weight: 300;
+    color: var(--c-text-primary);
+    cursor: pointer;
+    display: flex;
+    align-items: center;
+    justify-content: center;
+    transition: background 0.15s;
+    user-select: none;
+    -webkit-tap-highlight-color: transparent;
+}
+
+.pin-key:hover {
+    background: var(--c-habit-hover);
+}
+
+.pin-key:active {
+    background: var(--c-accent);
+    color: #fff;
+}
+
+.pin-key-empty {
+    background: transparent;
+    cursor: default;
+}
+
+.pin-key-empty:hover {
+    background: transparent;
+}
+
+.pin-key-delete {
+    background: transparent;
+    color: var(--c-text-secondary);
+}
+
+.pin-key-delete:hover {
+    background: var(--c-card);
+    color: var(--c-text-primary);
+}
+
+.pin-key-delete:active {
+    background: var(--c-card);
+    color: var(--c-text-primary);
+}
+
+/* Shake animation */
+@keyframes shake {
+    0%, 100% { transform: translateX(0); }
+    20% { transform: translateX(-10px); }
+    40% { transform: translateX(10px); }
+    60% { transform: translateX(-6px); }
+    80% { transform: translateX(6px); }
+}
+
+.pin-dots.shake {
+    animation: shake 0.4s ease-in-out;
+}
+
+.pin-dots.shake .pin-dot {
+    border-color: #E74C3C;
+}
+
+/* Logout button */
+.logout-btn {
+    background: none;
+    border: none;
+    cursor: pointer;
+    color: var(--c-text-secondary);
+    font-family: var(--font-data);
+    font-size: 11px;
+    letter-spacing: 1px;
+    padding: 6px 12px;
+    border-radius: var(--radius);
+    transition: color 0.2s, background 0.2s;
+}
+
+.logout-btn:hover {
+    color: var(--c-text-primary);
+    background: var(--c-habit-hover);
+}

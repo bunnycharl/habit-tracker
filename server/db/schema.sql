@@ -1,6 +1,14 @@
 -- Habit Tracker Database Schema
 -- SQLite Database
 
+-- Table: users
+CREATE TABLE IF NOT EXISTS users (
+    id INTEGER PRIMARY KEY AUTOINCREMENT,
+    username TEXT NOT NULL UNIQUE,
+    pin_hash TEXT NOT NULL,
+    created_at DATETIME DEFAULT CURRENT_TIMESTAMP
+);
+
 -- Table: habits
 -- Stores habit definitions
 CREATE TABLE IF NOT EXISTS habits (

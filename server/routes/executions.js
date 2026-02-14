@@ -17,7 +17,7 @@ router.get('/', async (req, res, next) => {
       date: req.query.date
     };
 
-    const executions = await ExecutionService.getExecutions(filters);
+    const executions = await ExecutionService.getExecutions(filters, req.userId);
     res.json(executions);
   } catch (error) {
     next(error);
@@ -30,7 +30,7 @@ router.get('/', async (req, res, next) => {
  */
 router.get('/today', async (req, res, next) => {
   try {
-    const executions = await ExecutionService.getTodayExecutions();
+    const executions = await ExecutionService.getTodayExecutions(req.userId);
     res.json(executions);
   } catch (error) {
     next(error);
@@ -43,7 +43,7 @@ router.get('/today', async (req, res, next) => {
  */
 router.get('/habits-status', async (req, res, next) => {
   try {
-    const habits = await ExecutionService.getHabitsWithTodayStatus();
+    const habits = await ExecutionService.getHabitsWithTodayStatus(req.userId);
     res.json(habits);
   } catch (error) {
     next(error);
@@ -56,7 +56,7 @@ router.get('/habits-status', async (req, res, next) => {
  */
 router.post('/', async (req, res, next) => {
   try {
-    const execution = await ExecutionService.createExecution(req.body);
+    const execution = await ExecutionService.createExecution(req.body, req.userId);
     res.status(201).json(execution);
   } catch (error) {
     if (error.message === 'Habit not found') {
@@ -81,7 +81,7 @@ router.post('/toggle', async (req, res, next) => {
       return res.status(400).json({ error: 'habit_id is required' });
     }
 
-    const result = await ExecutionService.toggleExecution(habit_id, date);
+    const result = await ExecutionService.toggleExecution(habit_id, date, req.userId);
     res.json(result);
   } catch (error) {
     if (error.message === 'Habit not found') {
@@ -100,7 +100,8 @@ router.delete('/:habitId/:date', async (req, res, next) => {
   try {
     const result = await ExecutionService.deleteExecution(
       req.params.habitId,
-      req.params.date
+      req.params.date,
+      req.userId
     );
     res.json(result);
   } catch (error) {

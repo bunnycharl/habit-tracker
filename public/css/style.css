@@ -128,6 +128,13 @@ body {
     gap: 16px;
 }
 
+/* Mobile order: System Status → Current Cycle → Heatmap → Stats → System Input */
+.system-status    { order: 1; }
+.col-today        { order: 2; }
+.heatmap-container { order: 3; }
+.stats-row        { order: 4; }
+.habit-creation   { order: 5; }
+
 /* Panel (card) */
 
 .panel {
@@ -141,12 +148,23 @@ body {
     overflow: visible;
 }
 
-/* Left Column: Input */
+/* System Status */
 
-.col-input {
+.system-status {
     display: flex;
     flex-direction: column;
-    gap: 16px;
+}
+
+.system-status-chart {
+    flex: 1;
+    display: flex;
+    align-items: center;
+    justify-content: center;
+}
+
+.system-status-chart svg {
+    width: 140px;
+    height: 140px;
 }
 
 .habit-creation {
@@ -180,10 +198,10 @@ input[type="text"]:focus {
 }
 
 .color-opt {
-    width: 44px;
-    height: 44px;
-    min-width: 44px;
-    min-height: 44px;
+    width: 28px;
+    height: 28px;
+    min-width: 28px;
+    min-height: 28px;
     border-radius: 2px;
     cursor: pointer;
     opacity: 0.5;
@@ -240,13 +258,7 @@ input[type="text"]:focus {
     opacity: 0.9;
 }
 
-/* Center Column: Visualization */
-
-.col-viz {
-    display: flex;
-    flex-direction: column;
-    gap: 16px;
-}
+/* (col-viz removed - flat layout) */
 
 /* Stats Row - mobile: stacked vertically */
 
@@ -302,42 +314,6 @@ input[type="text"]:focus {
     letter-spacing: 0.5px;
 }
 
-.heatmap-view-toggle {
-    display: flex;
-    gap: 8px;
-    margin-bottom: 16px;
-    background: var(--c-heatmap-toggle-bg);
-    padding: 4px;
-    border-radius: 4px;
-    width: fit-content;
-}
-
-.view-toggle-btn {
-    font-family: var(--font-data);
-    font-size: 12px;
-    padding: 10px 16px;
-    border: none;
-    background: transparent;
-    color: var(--c-text-secondary);
-    cursor: pointer;
-    border-radius: 2px;
-    transition: all 0.2s;
-    text-transform: uppercase;
-    letter-spacing: 0.5px;
-    font-weight: 500;
-    min-height: 44px;
-    touch-action: manipulation;
-}
-
-.view-toggle-btn:hover {
-    background: var(--c-heatmap-toggle-hover);
-    color: var(--c-text-primary);
-}
-
-.view-toggle-btn.active {
-    background: var(--c-accent);
-    color: white;
-}
 
 .heatmap-grid {
     display: grid;
@@ -522,8 +498,9 @@ input[type="text"]:focus {
         font-size: 26px;
     }
 
-    .col-input {
-        gap: 24px;
+    .system-status-chart svg {
+        width: 180px;
+        height: 180px;
     }
 
     /* Stats row: horizontal 3 columns on tablet */
@@ -538,10 +515,6 @@ input[type="text"]:focus {
         min-height: 120px;
     }
 
-    .col-viz {
-        gap: 24px;
-    }
-
     /* Heatmap: 26 weeks on tablet */
     .heatmap-grid {
         grid-template-columns: repeat(26, 1fr);
@@ -554,10 +527,10 @@ input[type="text"]:focus {
     }
 
     .color-opt {
-        width: 44px;
-        height: 44px;
-        min-width: 44px;
-        min-height: 44px;
+        width: 32px;
+        height: 32px;
+        min-width: 32px;
+        min-height: 32px;
     }
 
     .checkbox {
@@ -583,7 +556,20 @@ input[type="text"]:focus {
         height: 85vh;
         display: grid;
         grid-template-columns: 320px 1fr 380px;
+        grid-template-rows: auto 1fr;
         gap: 24px;
+    }
+
+    /* Desktop grid placement */
+    .habit-creation    { grid-column: 1; grid-row: 1; order: unset; }
+    .system-status     { grid-column: 1; grid-row: 2; order: unset; }
+    .stats-row         { grid-column: 2; grid-row: 1; order: unset; height: 120px; }
+    .heatmap-container { grid-column: 2; grid-row: 2; order: unset; }
+    .col-today         { grid-column: 3; grid-row: 1 / 3; order: unset; }
+
+    .system-status-chart svg {
+        width: 200px;
+        height: 200px;
     }
 
     .data-huge {
@@ -592,15 +578,6 @@ input[type="text"]:focus {
 
     .data-large {
         font-size: 28px;
-    }
-
-    .col-viz {
-        display: grid;
-        grid-template-rows: auto 1fr;
-    }
-
-    .stats-row {
-        height: 120px;
     }
 
     /* Heatmap: full 53 weeks on desktop */
@@ -620,10 +597,10 @@ input[type="text"]:focus {
     }
 
     .color-opt {
-        width: 44px;
-        height: 44px;
-        min-width: 44px;
-        min-height: 44px;
+        width: 24px;
+        height: 24px;
+        min-width: 24px;
+        min-height: 24px;
     }
 
     .checkbox {
@@ -760,10 +737,9 @@ input[type="text"]:focus {
     animation: fade-in 0.5s cubic-bezier(0.16, 1, 0.3, 1) both;
 }
 
-.col-input .panel:nth-child(1) { animation-delay: 0.0s; }
-.col-input .panel:nth-child(2) { animation-delay: 0.1s; }
-.col-viz .panel:nth-child(1)   { animation-delay: 0.05s; }
-.col-viz .panel:nth-child(2)   { animation-delay: 0.15s; }
+.habit-creation     { animation-delay: 0.0s; }
+.system-status      { animation-delay: 0.1s; }
+.heatmap-container  { animation-delay: 0.15s; }
 
 .col-today {
     animation: fade-in 0.5s cubic-bezier(0.16, 1, 0.3, 1) 0.1s both;
@@ -771,16 +747,14 @@ input[type="text"]:focus {
 
 /* --- Button press effects --- */
 
-.btn-add,
-.view-toggle-btn {
+.btn-add {
     transition: transform 0.15s cubic-bezier(0.16, 1, 0.3, 1),
                 opacity 0.2s ease,
                 background 0.2s ease,
                 color 0.2s ease;
 }
 
-.btn-add:active,
-.view-toggle-btn:active {
+.btn-add:active {
     transform: scale(0.96);
 }
 
@@ -820,8 +794,7 @@ input[type="text"]:focus {
     box-shadow: 0 1px 0 0 var(--c-text-primary);
 }
 
-.btn-add:focus-visible,
-.view-toggle-btn:focus-visible {
+.btn-add:focus-visible {
     outline: 2px solid var(--c-accent);
     outline-offset: 2px;
 }

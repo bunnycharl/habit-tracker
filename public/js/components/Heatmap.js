@@ -5,8 +5,7 @@ export class Heatmap {
   constructor(container) {
     this.container = container;
     this.year = new Date().getFullYear();
-    this.viewMode = 'year'; // 'year' or 'month'
-    this.currentMonth = new Date().getMonth(); // 0-11
+    this.viewMode = 'year';
     this._cachedData = null;
     this._resizeHandler = null;
     this._initResponsive();
@@ -49,42 +48,21 @@ export class Heatmap {
       const heatmapData = await AnalyticsAPI.getHeatmap(year);
       this._cachedData = heatmapData.data;
 
-      // Add view toggle if not exists
-      this.renderViewToggle();
-
       this.renderGrid(heatmapData.data);
 
       // Update year display
       const yearEl = document.getElementById('heatmapYear');
-      if (yearEl) yearEl.textContent = this.viewMode === 'year' ? year : this.getMonthYearLabel();
+      if (yearEl) yearEl.textContent = year;
     } catch (error) {
       console.error('Error loading heatmap:', error);
       this.renderError();
     }
   }
 
-  getMonthYearLabel() {
-    const months = ['January', 'February', 'March', 'April', 'May', 'June',
-                    'July', 'August', 'September', 'October', 'November', 'December'];
-    return `${months[this.currentMonth]} ${this.year}`;
-  }
-
   renderGrid(data) {
     clearElement(this.container);
 
-    // Filter data based on view mode
-    let displayData = data;
-
-    if (this.viewMode === 'month') {
-      // Show only current month
-      const monthStart = new Date(this.year, this.currentMonth, 1);
-      const monthEnd = new Date(this.year, this.currentMonth + 1, 0);
-
-      displayData = data.filter(item => {
-        const itemDate = new Date(item.date + 'T00:00:00');
-        return itemDate >= monthStart && itemDate <= monthEnd;
-      });
-    }
+    const displayData = data;
 
     // Calculate weeks based on actual data length
     const weeks = Math.ceil(displayData.length / 7);
@@ -185,49 +163,6 @@ export class Heatmap {
     this.container.appendChild(error);
   }
 
-  renderViewToggle() {
-    // Check if toggle already exists
-    let toggle = this.container.parentElement.querySelector('.heatmap-view-toggle');
-
-    if (!toggle) {
-      toggle = document.createElement('div');
-      toggle.className = 'heatmap-view-toggle';
-
-      const monthBtn = document.createElement('button');
-      monthBtn.className = 'view-toggle-btn';
-      monthBtn.textContent = 'Month';
-      monthBtn.dataset.view = 'month';
-
-      const yearBtn = document.createElement('button');
-      yearBtn.className = 'view-toggle-btn active';
-      yearBtn.textContent = 'Year';
-      yearBtn.dataset.view = 'year';
-
-      toggle.appendChild(monthBtn);
-      toggle.appendChild(yearBtn);
-
-      // Insert before heatmap grid
-      this.container.parentElement.insertBefore(toggle, this.container);
-
-      // Add event listeners
-      toggle.addEventListener('click', (e) => {
-        const btn = e.target.closest('.view-toggle-btn');
-        if (!btn) return;
-
-        const newView = btn.dataset.view;
-        if (newView === this.viewMode) return;
-
-        this.viewMode = newView;
-
-        // Update active state
-        toggle.querySelectorAll('.view-toggle-btn').forEach(b => b.classList.remove('active'));
-        btn.classList.add('active');
-
-        // Re-render
-        this.render(this.year);
-      });
-    }
-  }
 
 
   async refresh() {

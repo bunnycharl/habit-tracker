@@ -92,24 +92,24 @@ export class Statistics {
     const x2 = centerX + radius * Math.cos(endRad);
     const y2 = centerY + radius * Math.sin(endRad);
 
-    // Create gradient definition
+    // Create gradient definition (fixed vertical: top to bottom)
     const defs = document.createElementNS('http://www.w3.org/2000/svg', 'defs');
     const gradient = document.createElementNS('http://www.w3.org/2000/svg', 'linearGradient');
     gradient.setAttribute('id', 'pieGradient');
     gradient.setAttribute('gradientUnits', 'userSpaceOnUse');
-    gradient.setAttribute('x1', x1);
-    gradient.setAttribute('y1', y1);
-    gradient.setAttribute('x2', x2);
-    gradient.setAttribute('y2', y2);
+    gradient.setAttribute('x1', centerX);
+    gradient.setAttribute('y1', centerY - radius);
+    gradient.setAttribute('x2', centerX);
+    gradient.setAttribute('y2', centerY + radius);
 
     const stop1 = document.createElementNS('http://www.w3.org/2000/svg', 'stop');
     stop1.setAttribute('offset', '0%');
-    stop1.setAttribute('stop-color', '#10B981'); // Bright emerald
+    stop1.setAttribute('stop-color', '#10B981');
     stop1.setAttribute('stop-opacity', '1');
 
     const stop2 = document.createElementNS('http://www.w3.org/2000/svg', 'stop');
     stop2.setAttribute('offset', '100%');
-    stop2.setAttribute('stop-color', '#6EE7B7'); // Light emerald
+    stop2.setAttribute('stop-color', '#6EE7B7');
     stop2.setAttribute('stop-opacity', '1');
 
     gradient.appendChild(stop1);

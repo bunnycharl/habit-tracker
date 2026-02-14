@@ -1,7 +1,7 @@
 <!DOCTYPE html>
 <html lang="en">
 <head>
-    <!-- BUILD: 2026-02-14-02:02 -->
+    <!-- BUILD: 2026-02-14-03:00 -->
     <meta charset="UTF-8">
     <meta name="viewport" content="width=device-width, initial-scale=1.0">
     <title>Habit Sequence | Data-Driven Tracker</title>
@@ -15,98 +15,93 @@
     <link rel="preconnect" href="https://fonts.googleapis.com">
     <link rel="preconnect" href="https://fonts.gstatic.com" crossorigin>
     <link href="https://fonts.googleapis.com/css2?family=JetBrains+Mono:wght@300;400;500;700&family=Space+Grotesk:wght@300;400;500;600&display=swap" rel="stylesheet">
-    <link rel="stylesheet" href="/css/style.css?v=20260214-final">
+    <link rel="stylesheet" href="/css/style.css?v=20260214-v3">
 </head>
 <body>
 
     <main class="dashboard-container" role="main" aria-label="Habit Tracker Dashboard">
 
-        <!-- Left Column: Input -->
-        <aside class="col-input" aria-label="Habit creation and system status">
-            <section class="panel habit-creation" aria-labelledby="habit-creation-heading">
-                <span class="label-micro" id="system-input-label">System Input</span>
-                <h1 class="data-large" id="habit-creation-heading" style="margin-bottom: 24px;">New Protocol</h1>
+        <!-- System Input (New Protocol) -->
+        <section class="panel habit-creation" aria-labelledby="habit-creation-heading">
+            <span class="label-micro" id="system-input-label">System Input</span>
+            <h1 class="data-large" id="habit-creation-heading" style="margin-bottom: 24px;">New Protocol</h1>
 
-                <form id="habitForm" aria-label="Create a new habit">
-                    <div class="input-group">
-                        <label class="label-micro" for="habitInput">Identifier</label>
-                        <input type="text" placeholder="e.g. Morning Run" id="habitInput" aria-required="true" autocomplete="off">
-                    </div>
-
-                    <div class="input-group" role="group" aria-labelledby="marker-tone-label">
-                        <span class="label-micro" id="marker-tone-label">Marker Tone</span>
-                        <div class="color-selector" id="colorSelector" role="radiogroup" aria-label="Select habit color">
-                            <button type="button" class="color-opt bg-mint active" data-color="#6CEFA0" role="radio" aria-checked="true" aria-label="Mint green" tabindex="0"></button>
-                            <button type="button" class="color-opt bg-blue" data-color="#6CDDEF" role="radio" aria-checked="false" aria-label="Blue" tabindex="-1"></button>
-                            <button type="button" class="color-opt bg-purple" data-color="#B06CEF" role="radio" aria-checked="false" aria-label="Purple" tabindex="-1"></button>
-                            <button type="button" class="color-opt bg-orange" data-color="#EF9B6C" role="radio" aria-checked="false" aria-label="Orange" tabindex="-1"></button>
-                            <label class="color-opt color-picker-opt" role="radio" aria-checked="false" aria-label="Custom color" tabindex="-1" style="cursor: pointer;">
-                                <input type="color" id="customColorPicker" value="#6CEFA0" style="opacity: 0; width: 0; height: 0; position: absolute;">
-                                <svg width="16" height="16" viewBox="0 0 16 16" fill="none" style="pointer-events: none;">
-                                    <circle cx="8" cy="8" r="6" stroke="currentColor" stroke-width="1.5" fill="none"/>
-                                    <circle cx="8" cy="8" r="3" fill="currentColor"/>
-                                </svg>
-                            </label>
-                        </div>
-                    </div>
-
-                    <button type="submit" class="btn-add" id="addHabitBtn">Initialize Routine</button>
-                </form>
-            </section>
-
-            <section class="panel" style="flex: 1; display: flex; flex-direction: column;" aria-labelledby="system-status-heading">
-                 <h2 class="label-micro" id="system-status-heading">System Status</h2>
-                 <div style="flex: 1; display: flex; align-items: center; justify-content: center;">
-                     <svg id="dailyPieChart" width="200" height="200" viewBox="0 0 120 120" role="img" aria-label="Daily completion progress">
-                         <!-- Pie chart will be rendered here -->
-                     </svg>
-                 </div>
-                 <div style="margin-top: auto;">
-                     <div class="data-mono" style="margin-bottom: 8px;">ACTIVE HABITS: <span id="activeCount" aria-live="polite">0</span></div>
-                     <div class="data-mono" style="margin-bottom: 8px;">COMPLETION RATE: <span id="completionRate" aria-live="polite">0</span>%</div>
-                 </div>
-            </section>
-        </aside>
-
-        <!-- Center Column: Visualization -->
-        <section class="col-viz" aria-label="Data visualizations">
-
-            <!-- Stats Row -->
-            <div class="stats-row" role="group" aria-label="Key statistics">
-                <article class="panel stat-card" aria-labelledby="total-exec-label">
-                    <h2 class="label-micro" id="total-exec-label">Total Executions</h2>
-                    <span class="data-huge" id="totalExecutions" aria-live="polite">0</span>
-                    <div class="chart-mini" style="height: 20px;" id="executionsChart" role="img" aria-label="Executions trend">
-                    </div>
-                </article>
-                <article class="panel stat-card" aria-labelledby="max-streak-label">
-                    <h2 class="label-micro" id="max-streak-label">Max Streak</h2>
-                    <span class="data-huge" id="maxStreak" aria-live="polite">0<span style="font-size: 16px; color: #888; font-weight: 400; margin-left: 4px;">DAYS</span></span>
-                    <div class="chart-mini" style="height: 20px;" id="streakChart" role="img" aria-label="Streak trend">
-                    </div>
-                </article>
-                <article class="panel stat-card" aria-labelledby="efficiency-label">
-                    <h2 class="label-micro" id="efficiency-label">Efficiency</h2>
-                    <span class="data-huge" id="efficiency" aria-live="polite">0%</span>
-                     <div class="chart-mini" style="height: 20px;" id="efficiencyChart" role="img" aria-label="Efficiency trend">
-                    </div>
-                </article>
-            </div>
-
-            <!-- Heatmap -->
-            <section class="panel heatmap-container" aria-labelledby="heatmap-heading">
-                <header style="display:flex; justify-content:space-between;">
-                    <h2 class="label-micro" id="heatmap-heading">Annual Consistency Matrix</h2>
-                    <span class="label-micro" id="heatmapYear" aria-live="polite">2026</span>
-                </header>
-
-                <div class="heatmap-grid" id="heatmapGrid" role="img" aria-label="Annual habit completion heatmap">
-                    <!-- Heatmap cells will be generated here -->
+            <form id="habitForm" aria-label="Create a new habit">
+                <div class="input-group">
+                    <label class="label-micro" for="habitInput">Identifier</label>
+                    <input type="text" placeholder="e.g. Morning Run" id="habitInput" aria-required="true" autocomplete="off">
                 </div>
-            </section>
+
+                <div class="input-group" role="group" aria-labelledby="marker-tone-label">
+                    <span class="label-micro" id="marker-tone-label">Marker Tone</span>
+                    <div class="color-selector" id="colorSelector" role="radiogroup" aria-label="Select habit color">
+                        <button type="button" class="color-opt bg-mint active" data-color="#6CEFA0" role="radio" aria-checked="true" aria-label="Mint green" tabindex="0"></button>
+                        <button type="button" class="color-opt bg-blue" data-color="#6CDDEF" role="radio" aria-checked="false" aria-label="Blue" tabindex="-1"></button>
+                        <button type="button" class="color-opt bg-purple" data-color="#B06CEF" role="radio" aria-checked="false" aria-label="Purple" tabindex="-1"></button>
+                        <button type="button" class="color-opt bg-orange" data-color="#EF9B6C" role="radio" aria-checked="false" aria-label="Orange" tabindex="-1"></button>
+                        <label class="color-opt color-picker-opt" role="radio" aria-checked="false" aria-label="Custom color" tabindex="-1" style="cursor: pointer;">
+                            <input type="color" id="customColorPicker" value="#6CEFA0" style="opacity: 0; width: 0; height: 0; position: absolute;">
+                            <svg width="16" height="16" viewBox="0 0 16 16" fill="none" style="pointer-events: none;">
+                                <circle cx="8" cy="8" r="6" stroke="currentColor" stroke-width="1.5" fill="none"/>
+                                <circle cx="8" cy="8" r="3" fill="currentColor"/>
+                            </svg>
+                        </label>
+                    </div>
+                </div>
+
+                <button type="submit" class="btn-add" id="addHabitBtn">Initialize Routine</button>
+            </form>
         </section>
 
-        <!-- Right Column: Today's Habits -->
+        <!-- System Status -->
+        <section class="panel system-status" aria-labelledby="system-status-heading">
+             <h2 class="label-micro" id="system-status-heading">System Status</h2>
+             <div class="system-status-chart">
+                 <svg id="dailyPieChart" width="200" height="200" viewBox="0 0 120 120" role="img" aria-label="Daily completion progress">
+                     <!-- Pie chart will be rendered here -->
+                 </svg>
+             </div>
+             <div style="margin-top: auto;">
+                 <div class="data-mono" style="margin-bottom: 8px;">ACTIVE HABITS: <span id="activeCount" aria-live="polite">0</span></div>
+                 <div class="data-mono" style="margin-bottom: 8px;">COMPLETION RATE: <span id="completionRate" aria-live="polite">0</span>%</div>
+             </div>
+        </section>
+
+        <!-- Stats Row -->
+        <div class="stats-row" role="group" aria-label="Key statistics">
+            <article class="panel stat-card" aria-labelledby="total-exec-label">
+                <h2 class="label-micro" id="total-exec-label">Total Executions</h2>
+                <span class="data-huge" id="totalExecutions" aria-live="polite">0</span>
+                <div class="chart-mini" style="height: 20px;" id="executionsChart" role="img" aria-label="Executions trend">
+                </div>
+            </article>
+            <article class="panel stat-card" aria-labelledby="max-streak-label">
+                <h2 class="label-micro" id="max-streak-label">Max Streak</h2>
+                <span class="data-huge" id="maxStreak" aria-live="polite">0<span style="font-size: 16px; color: #888; font-weight: 400; margin-left: 4px;">DAYS</span></span>
+                <div class="chart-mini" style="height: 20px;" id="streakChart" role="img" aria-label="Streak trend">
+                </div>
+            </article>
+            <article class="panel stat-card" aria-labelledby="efficiency-label">
+                <h2 class="label-micro" id="efficiency-label">Efficiency</h2>
+                <span class="data-huge" id="efficiency" aria-live="polite">0%</span>
+                 <div class="chart-mini" style="height: 20px;" id="efficiencyChart" role="img" aria-label="Efficiency trend">
+                </div>
+            </article>
+        </div>
+
+        <!-- Heatmap -->
+        <section class="panel heatmap-container" aria-labelledby="heatmap-heading">
+            <header style="display:flex; justify-content:space-between;">
+                <h2 class="label-micro" id="heatmap-heading">Annual Consistency Matrix</h2>
+                <span class="label-micro" id="heatmapYear" aria-live="polite">2026</span>
+            </header>
+
+            <div class="heatmap-grid" id="heatmapGrid" role="img" aria-label="Annual habit completion heatmap">
+                <!-- Heatmap cells will be generated here -->
+            </div>
+        </section>
+
+        <!-- Today's Habits -->
         <section class="col-today" aria-labelledby="today-heading">
             <div class="panel" style="height: 100%;">
                 <header class="today-header">

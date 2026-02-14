@@ -1,4 +1,4 @@
-const CACHE_NAME = 'habit-tracker-v20260214-auth5';
+const CACHE_NAME = 'habit-tracker-v20260214-auth6';
 
 const STATIC_ASSETS = [
   '/',

@@ -128,6 +128,9 @@ body {
     gap: 16px;
 }
 
+/* col-input, col-viz: on mobile, children participate directly in flex */
+.col-input, .col-viz { display: contents; }
+
 /* Mobile order: System Status → Current Cycle → Heatmap → Stats → System Input */
 .system-status    { order: 1; }
 .col-today        { order: 2; }
@@ -557,16 +560,26 @@ input[type="text"]:focus {
         height: 85vh;
         display: grid;
         grid-template-columns: 320px 1fr 380px;
-        grid-template-rows: auto auto 1fr;
         gap: 24px;
     }
 
-    /* Desktop grid placement */
-    .habit-creation    { grid-column: 1; grid-row: 1; order: unset; }
-    .system-status     { grid-column: 1; grid-row: 2; order: unset; }
-    .stats-row         { grid-column: 2; grid-row: 1; order: unset; height: 120px; }
-    .heatmap-container { grid-column: 1 / 3; grid-row: 3; order: unset; }
-    .col-today         { grid-column: 3; grid-row: 1 / 4; order: unset; }
+    /* col-input: left column stack */
+    .col-input {
+        display: flex;
+        flex-direction: column;
+        gap: 24px;
+    }
+
+    /* col-viz: middle column, stats on top + heatmap fills rest */
+    .col-viz {
+        display: grid;
+        grid-template-rows: auto 1fr;
+        gap: 24px;
+    }
+
+    /* Reset mobile order */
+    .habit-creation, .system-status, .col-today, .col-input, .col-viz,
+    .stats-row, .heatmap-container { order: unset; }
 
     .system-status-chart svg {
         width: 200px;

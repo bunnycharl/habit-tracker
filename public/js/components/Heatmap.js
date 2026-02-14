@@ -62,23 +62,20 @@ export class Heatmap {
   renderGrid(data) {
     clearElement(this.container);
 
-    // Show only last N weeks on smaller screens
+    // Clear any previously set inline grid style — CSS handles responsive columns
+    this.container.style.gridTemplateColumns = '';
+
     const maxWeeks = this.getResponsiveWeeks();
-    const maxDays = maxWeeks * 7;
-    const displayData = data.length > maxDays ? data.slice(-maxDays) : data;
+    const totalCells = maxWeeks * 7;
 
-    const weeks = Math.ceil(displayData.length / 7);
-
-    // Update grid layout
-    this.container.style.gridTemplateColumns = `repeat(${weeks}, 1fr)`;
-
-    const totalCells = displayData.length;
+    // On mobile/tablet show last N weeks of data; on desktop show full year
+    const displayData = data.length > totalCells ? data.slice(-totalCells) : data;
 
     for (let i = 0; i < totalCells; i++) {
       const cell = document.createElement('div');
       cell.className = 'day-cell';
 
-      const dayData = displayData[i];
+      const dayData = i < displayData.length ? displayData[i] : null;
 
       if (dayData) {
         const completionRate = dayData.completion_rate;
@@ -96,8 +93,6 @@ export class Heatmap {
         // Add popover
         const popover = this.createPopover(dayData);
         cell.appendChild(popover);
-      } else {
-        cell.style.backgroundColor = '#FAFAFA';
       }
 
       this.container.appendChild(cell);

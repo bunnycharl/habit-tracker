@@ -581,9 +581,19 @@ input[type="text"]:focus {
     .habit-creation, .system-status, .col-today, .col-input, .col-viz,
     .stats-row, .heatmap-container { order: unset; }
 
+    /* System status fills remaining height in left column */
+    .system-status {
+        flex: 1;
+    }
+
     .system-status-chart svg {
         width: 200px;
         height: 200px;
+    }
+
+    /* Stats row: fixed height matching design */
+    .stats-row {
+        height: 120px;
     }
 
     .data-huge {
@@ -600,6 +610,10 @@ input[type="text"]:focus {
         gap: 4px;
         height: 100%;
         min-height: unset;
+    }
+
+    .day-cell {
+        aspect-ratio: unset;
     }
 
     .heatmap-month-labels {

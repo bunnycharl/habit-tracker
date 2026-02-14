@@ -1623,10 +1623,11 @@ button.color-opt:focus-visible {
 
 /* Logout button */
 .logout-btn {
-    display: block;
-    margin-left: auto;
-    margin-bottom: 8px;
-    background: none;
+    position: fixed;
+    top: 12px;
+    right: 16px;
+    z-index: 100;
+    background: var(--c-card);
     border: none;
     cursor: pointer;
     color: var(--c-text-secondary);
@@ -1635,6 +1636,7 @@ button.color-opt:focus-visible {
     letter-spacing: 1px;
     padding: 6px 12px;
     border-radius: var(--radius);
+    box-shadow: var(--shadow);
     transition: color 0.2s, background 0.2s;
 }
 

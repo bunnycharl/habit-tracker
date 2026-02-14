@@ -62,9 +62,11 @@ export class Heatmap {
   renderGrid(data) {
     clearElement(this.container);
 
-    const displayData = data;
+    // Show only last N weeks on smaller screens
+    const maxWeeks = this.getResponsiveWeeks();
+    const maxDays = maxWeeks * 7;
+    const displayData = data.length > maxDays ? data.slice(-maxDays) : data;
 
-    // Calculate weeks based on actual data length
     const weeks = Math.ceil(displayData.length / 7);
 
     // Update grid layout

@@ -1386,26 +1386,7 @@ button.color-opt:focus-visible {
 }
 
 
-/* ── Accessibility: Fieldset Reset ─────────────────────── */
-
-fieldset.input-group {
-    margin-bottom: 20px;
-    border: none;
-    padding: 0;
-    padding-inline-start: 0;
-    padding-inline-end: 0;
-    padding-block-start: 0;
-    padding-block-end: 0;
-    margin-inline-start: 0;
-    margin-inline-end: 0;
-    min-inline-size: 0;
-}
-
-fieldset.input-group legend.label-micro {
-    float: left;
-    width: 100%;
-    padding: 0;
-}
+/* ── Accessibility: Color Group ────────────────────────── */
 
 
 /* ── Accessibility: High Contrast Mode ─────────────────── */

@@ -33,8 +33,8 @@
                         <input type="text" placeholder="e.g. Morning Run" id="habitInput" aria-required="true" autocomplete="off">
                     </div>
 
-                    <fieldset class="input-group" style="border: none; padding: 0;">
-                        <legend class="label-micro">Marker Tone</legend>
+                    <div class="input-group" role="group" aria-labelledby="marker-tone-label">
+                        <span class="label-micro" id="marker-tone-label">Marker Tone</span>
                         <div class="color-selector" id="colorSelector" role="radiogroup" aria-label="Select habit color">
                             <button type="button" class="color-opt bg-mint active" data-color="#6CEFA0" role="radio" aria-checked="true" aria-label="Mint green" tabindex="0"></button>
                             <button type="button" class="color-opt bg-blue" data-color="#6CDDEF" role="radio" aria-checked="false" aria-label="Blue" tabindex="-1"></button>
@@ -48,7 +48,7 @@
                                 </svg>
                             </label>
                         </div>
-                    </fieldset>
+                    </div>
 
                     <button type="submit" class="btn-add" id="addHabitBtn">Initialize Routine</button>
                 </form>
